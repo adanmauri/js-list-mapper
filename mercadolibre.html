@@ -15,28 +15,28 @@
 			});
 				
 			var collection = new ElementCollection(selector);
-			//console.log(collection);
-
-			var paginator = new ElementPaginator("//ul[@class='ch-pagination']");
-			
+			var paginator = new ElementPaginator("//div[@class='pagination__container']//li[@class='pagination__next']/a/@href");
 			var es = new ElementSearch("pokemon", "http://www.mercadolibre.com.ar", {elementSelector: selector, elementPaginator: paginator}, "//input[@class='nav-search-input']");
-
 			var ec = await es.search();
+			var count = 0;
+			var e;
+			
+			do {
+				while (e = ec.next()) {
+					count++;
+					img = e["img"]["src"]?e["img"]["src"]:e["img"].title;
 
-
-			for (var i = ec.length()-1; i >= 0; i--) {
-				var e = ec.next();
-				img = e["img"]["src"]?e["img"]["src"]:e["img"].title;
-
-				document.getElementById("mercadolibre").innerHTML += "<a target=\"_blank\" href=\"" + e.url + "\">\
-					<div class=\"product-box\">\
-						<div class=\"product-image\" style=\"background-image:url('" + img + "');\"></div>\
-						<div class=\"product-title\">" + e.title + "</div>\
-						<div class=\"product-price\">$ " + e.price + "</div>\
-					</div>\
-				</a>";
-			}
-			ec.nextPage();
+					document.getElementById("mercadolibre").innerHTML += "<a target=\"_blank\" href=\"" + e.url + "\">\
+						<div class=\"product-box\">\
+							<div class=\"product-image\" style=\"background-image:url('" + img + "');\"></div>\
+							<div class=\"product-title\">" + e.title + "</div>\
+							<div class=\"product-price\">$ " + e.price + "</div>\
+						</div>\
+					</a>";
+				}
+				
+			} while ((ec = await ec.nextPage()) && (count < 1000));
+			console.log(count);
 		}
 		workSpace();
 		</script>

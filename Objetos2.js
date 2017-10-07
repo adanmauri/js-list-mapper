@@ -293,9 +293,10 @@ class ElementCollection {
         }catch(err) {
             console.error("There is an error in the XPath query: "+this.selector);
         }
-        console.log(xpathResult);
         try {
-            this.url = ElementUtilities.getUrl((xpathResult.snapshotItem(0).nodeValue)?xpathResult.snapshotItem(0).nodeValue:xpathResult.snapshotItem(0), this.baseUrl);
+			var eu;
+			eu = new ElementUtilities();
+            this.url = eu.getUrl((xpathResult.snapshotItem(0).nodeValue)?xpathResult.snapshotItem(0).nodeValue:xpathResult.snapshotItem(0), this.baseUrl);
         }catch(err) {
             console.error("The XPath query is not getting valid element (non-existent or null)");
         }

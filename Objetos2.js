@@ -293,6 +293,7 @@ class ElementCollection {
         }catch(err) {
             console.error("There is an error in the XPath query: "+this.selector);
         }
+        
         try {
 			var eu;
 			eu = new ElementUtilities();

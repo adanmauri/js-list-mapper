@@ -1,3 +1,103 @@
+String.prototype.union = function(anotherStr) {
+	tmpStr = this;
+	tmpAnotherStr = anotherStr;
+
+	if (tmpStr.length < tmpAnotherStr.length) {
+		tmpAnotherStr = tmpAnotherStr.substring(0,tmpStr.length);
+	} else if (tmpAnotherStr.length < tmpStr.length) {
+		tmpStr = tmpStr.substring(tmpStr.length-tmpAnotherStr.length, tmpStr.length);
+	}
+
+	do {
+		if (tmpStr.includes(tmpAnotherStr)) {
+			break;
+		}
+		tmpStr = tmpStr.substring(1,tmpStr.length);
+		tmpAnotherStr = tmpAnotherStr.substring(0,tmpAnotherStr.length-1);
+	} while (tmpStr.length > 0 & tmpAnotherStr.length > 0);
+	str = this + anotherStr.substring(tmpAnotherStr.length,anotherStr.length);
+	return str;
+}
+
+function getParams() {
+	params = window.location.search.substring(1,window.location.search.length);
+	params = params.split('&');
+	result = {};
+	for (i=0; i < params.length; i++) {
+		aux = params[i].split('=');
+		if (aux[0].length > 0) {
+			result[aux[0]] = (aux.length > 1)?aux[1]:null;
+		}
+	}
+	return result;
+}
+
+/*
+String.prototype.complement = function(anotherStr) {
+	tmpStr = this;
+	tmpAnotherStr = anotherStr;
+
+	if (tmpStr.length < tmpAnotherStr.length) {
+		tmpAnotherStr = tmpAnotherStr.substring(0,tmpStr.length);
+	} else if (tmpAnotherStr.length < tmpStr.length) {
+		tmpStr = tmpStr.substring(tmpStr.length-tmpAnotherStr.length, tmpStr.length);
+	}
+
+	do {
+		if (tmpStr.includes(tmpAnotherStr)) {
+			break;
+		}
+		tmpStr = tmpStr.substring(1,tmpStr.length);
+		tmpAnotherStr = tmpAnotherStr.substring(0,tmpAnotherStr.length-1);
+	} while (tmpStr.length > 0 & tmpAnotherStr.length > 0);
+	
+	console.log(anotherStr.length+" "+anotherStr);
+	console.log(tmpAnotherStr.length+" "+tmpAnotherStr);
+	console.log(anotherStr.length-tmpAnotherStr.length);
+	console.log(this.length+" "+this);
+	
+	
+	return this.substring(0, anotherStr.length-tmpAnotherStr.length);
+}*/
+
+// window.prompt("Copy to clipboard: Ctrl+C, Enter", this.context.body.outerHTML);
+// DOCUMENTAR ELEMENTOS OPCIONALES
+// DOCUMENTAR QUERIES
+
+
+/* =======================
+ * Js Object Lists
+ * =======================
+ */
+class JsObjectLists {
+
+	constructor(url, elementSelector, paginatorSelector, searchSelector){
+		this.url 			   = url;
+		this.elementSelector   = elementSelector;
+		this.paginatorSelector = paginatorSelector;
+		this.searchSelector    = searchSelector;
+	}
+
+	async search(search){
+		var selector = new ElementSelector(this.elementSelector);
+		var collection = new ElementCollection(selector);
+		var paginator;
+		var params;
+
+		if (this.paginatorSelector) {
+			paginator = new ElementPaginator(this.paginatorSelector, this.url);
+			params = {elementSelector: selector, elementPaginator: paginator};
+		} else {
+			params = {elementSelector: selector};
+		}
+
+		var es = new ElementSearch(search, this.url, params, this.searchSelector);
+		var r = await es.search();
+		
+		return r;
+	}
+}
+
 /* =======================
  * ElementSelector Class
  * =======================
@@ -9,12 +109,14 @@ class ElementSelector {
 	 * Params:
 	 * - selector: Object (XPaths queries)
 	 * - context: String (HTML document) (optional)
+	 * - baseUrl: String (An url) (optional)
 	 * Return: an ElementSelector Object
 	 */
-	constructor(selector, context) {
+	constructor(selector, context, baseUrl) {
         this.selector = selector;
 		this.attr = Object.keys(this.selector);
 		this.context = context || document;
+		this.baseUrl = baseUrl;
     }
 
 	/* getSelector
@@ -89,7 +191,11 @@ class ElementSelector {
                 try {
                     e[this.attr[j]] = (XPathRes[this.attr[j]].snapshotItem(i).nodeValue)?XPathRes[this.attr[j]].snapshotItem(i).nodeValue:XPathRes[this.attr[j]].snapshotItem(i);
                 }catch(err) {
-                    console.error("The XPath query is not getting valid elements (non-existent or null)");
+					if (this.attr[j].includes("$")) {
+						e[this.attr[j]] = null;
+					} else {
+						console.error("The XPath query is not getting valid elements (non-existent or null)");
+					}
                 }
             }
             response.push(e);
@@ -226,7 +332,7 @@ class ElementCollection {
         return this.paginator.pageNumber;
     }
 }
-
+	
 /* =======================
  * ElementPaginator Class
  * =======================
@@ -346,15 +452,21 @@ class ElementUtilities {
 	 */
 	async request(url, method='GET') {
         //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-        var myHeaders = new Headers();
-        var myInit = { method: 'GET',
-            headers: myHeaders,
-            mode: 'cors',
-            cache: 'default',
-            method: method };
+        
+        //document.cookie="PREF='f1=50000000&f6=8&f5=30';;path=/;domain=.youtube.com;expires=Thu, 2 Aug 2020 20:47:11 UTC";
+        
+        var headers = new Headers();
+        var params = {
+				method: 'GET',
+				headers: headers,
+				mode: 'cors',
+				cache: 'default',
+				method: method,
+				credentials: 'include'
+        };
 
         try {
-			return await fetch(url, myInit);
+			return await fetch(url, params);
         } catch(err) {
 			console.error("The next page could not be loaded");
             console.log("URL: " + url);
@@ -387,7 +499,7 @@ class ElementUtilities {
 		return (route.lastIndexOf("http://") == 0) || (route.lastIndexOf("https://") == 0) || (route.lastIndexOf("//") == 0);
 	}
 
-	/* getBaseUrl
+	/* getBaseUrl (TIENE SENTIDO?)
 	 * ----------
 	 * Returns the base url of a route
 	 * Params:
@@ -397,24 +509,11 @@ class ElementUtilities {
 	 *
 	 */
 	getBaseUrl(route, url) {
-		var i;
 		if (url) {
-			var lo = url.lastIndexOf(route);
-			var n = 0;
-			lo = (lo < 0)?0:lo;
-			for (i = lo;i < url.length;i++) {
-				if (url[i] != route[n]) {
-					break;
-				}
-				n++;
-			}
-			if (url.length == i) {
-				url = url.slice(0, lo);
-			}
+			return url.union(route);
 		}else {
-			url = route;
+			return route;
 		}
-		return url;
 	}
 
 	/* getUrl
@@ -427,10 +526,27 @@ class ElementUtilities {
 	 *
 	 */
 	getUrl(route, url) {
-		var eu = new ElementUtilities();
-        var baseUrl = (eu.isAbsolutePath(route))?"":eu.getBaseUrl(route, url);
-		return baseUrl+route;
+		url = url || '';
+		return url.union(route);
 	}
+	
+    /* Fix Protocol. 
+     * -------------
+     * fetch no work with // (File protocol)
+     * Params:
+     * - url: String (URL)
+     * - sendUrl: String (URL)
+     * Return: a String (URL) with original protocol
+     */
+    fixUrlProtocol(url, sendUrl) {
+        var urlObject = new URL(url);
+
+        if (sendUrl.startsWith("//")){
+            return (sendUrl.indexOf('://') === -1) ? urlObject.protocol + sendUrl : sendUrl;
+        }else{
+            return sendUrl;
+        }        
+    }
 }
 /* =======================
  * ElementSearch Class
@@ -453,6 +569,7 @@ class ElementUtilities {
 		this.selector = selector;
 
 		this.elementSelector = (params.elementSelector)?params.elementSelector:new ElementSelector(params.selector);
+		
 		this.elementPaginator = (params.elementPaginator)?params.elementPaginator:(params.paginator)?new ElementPaginator(params.paginator, url):null;
 		if (this.elementPaginator && !this.elementPaginator.getBaseUrl()) {
 			this.elementPaginator.setBaseUrl(url);
@@ -566,7 +683,7 @@ class ElementUtilities {
      */
     evaluateSelector(){  
 		if (this.context) {
-			var xPathRes = this.context.evaluate(this.selector, this.context, null, 7, null);
+			var xPathRes = this.context.evaluate(this.selector, this.context, null, 7, null);						
 			this.input = (xPathRes.snapshotLength)?xPathRes.snapshotItem(0):null;
 			xPathRes = this.context.evaluate(this.selector+"/ancestor::form", this.context, null, 7, null);
 			this.form = (xPathRes.snapshotLength)?xPathRes.snapshotItem(0):null;
@@ -592,11 +709,11 @@ class ElementUtilities {
 			method = this.getFormMethod();
 			sendUrl = eu.getUrl(this.getFormAction(), this.url);
 			sendUrl+=(this.getFormMethod() == "GET")?"?"+this.serialize(this.form):"";
-            sendUrl = this.fixUrlProtocol(sendUrl);
-
+            sendUrl = eu.fixUrlProtocol(this.url, sendUrl);
+            
 			sendPost = (this.getFormMethod() == "POST")?this.serialize(this.form):null;
             if (sendPost){
-                sendPost = this.fixUrlProtocol(sendPost);
+                sendPost = eu.fixUrlProtocol(this.url, sendPost);
             }
 
 		} else {
@@ -604,30 +721,12 @@ class ElementUtilities {
 			sendPost = null;
 		}
 
-
 		var response = await eu.htmlRequest(sendUrl, method);			
 		var ec = new ElementCollection(this.elementSelector, response, this.elementPaginator);
 		
 		this.setContext(response);
 
 		return ec;
-    }
-
-    /* Fix Protocol. 
-     * -------------
-     * fetch no work with // (File protocol)
-     * Params:
-     * - sendUrl: String (URL)
-     * Return: a String (URL) with original protocol
-     */
-    fixUrlProtocol(sendUrl) {
-        var urlObject = new URL(this.url);
-
-        if (sendUrl.startsWith("//")){
-            return (sendUrl.indexOf('://') === -1) ? urlObject.protocol + sendUrl : sendUrl;
-        }else{
-            return sendUrl;
-        }        
     }
 
     /* search

@@ -1,45 +1,140 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>YouTube</title>
+		
+		<link rel="shortcut icon" href="https://s.ytimg.com/yts/img/favicon-vfl8qSV2F.ico" type="image/x-icon">
+		<link rel="icon" href="https://s.ytimg.com/yts/img/favicon.ico" type="image/x-icon">
+		
 		<meta charset="utf8" >
-		<script src="Objetos2.js" ></script>
-		<script src="jsLists.js" ></script>
-		<script src="youtubeJsLists.js" ></script>
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
-		<script>
-
-		async function workSpace () {
-			var ml = new YoutubeJsLists();
-			var ec = await ml.search('pokemon');
-			var count = 0;
-			var e;
-			var img;
-
-			do {
-				console.log(ec);
-				console.log(count);
-				while (e = ec.next()) {
-					count++;
-
-					img = e["img"]["src"]?e["img"]["src"]:e["img"].title;
-
-					document.getElementById("youtube").innerHTML += "<a target=\"_blank\" href=\"" + 'e.url' + "\">\
-						<div class=\"product-box\">\
-							<div class=\"product-image\" style=\"background-image:url('" + 'img' + "');\"></div>\
-							<div class=\"product-title\">" + e.title + "</div>\
-							<div class=\"product-price\">$ " + 'e.price' + "</div>\
-						</div>\
-					</a>";
-
-				}
-				
-			} while ((ec = await ec.nextPage()) && (count < 10));
-			console.log(count);
-		}
-		workSpace();
-		</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<script src="JsObjectLists.js" ></script>
+		<script src="YouTube.JsObjectLists.js" ></script>
+		<link rel="stylesheet" type="text/css" href="css/base.css" />
+		<link rel="stylesheet" type="text/css" href="css/youtube.css" />
 	</head>
 	<body>
-		<div id="youtube"></div>
+		<header>
+			<div class="header-container clearfix">
+				<div class="logo-container">
+					<img class="logo" src="https://www.youtube.com/yts/img/ringo/hitchhiker/logo_small_2x-vfl4_cFqn.png" alt="YouTube" />
+				</div>
+				<div class="search-container">
+					<input class="search" id="search" type="text" placeholder="Buscar" />
+				</div>
+				<div class="submit-container" >
+					<div id="submit" class="submit"><span>Buscar</span></div>
+				</div>
+				<div class="author-container" >
+					Adán Mauri Ungaro - Pablo Costanzo
+				</div>
+			</div>
+		</header>
+		<div class="search-elements-container" id="search-elements-container" >
+			<div class="search-elements clearfix" id="search-elements"></div>
+		</div>
+	
+		<script>
+			function elementAttr(e) {
+				eu = new ElementUtilities();
+				
+				if (e.url.includes("&ai=")) {
+					e.type = "ad";
+				} else if (e.url.includes("user")) {
+					e.type = "user";
+					e.id = e.url.split("user/");
+					e.id = e.id[e.id.length-1];
+					e.url = "https://www.youtube.com/user/"+e.id;
+				} else if (e.url.includes("list=")) {
+					e.type = "list";
+					e.id = e.url.split("list=");
+					e.id = e.id[e.id.length-1];
+					
+					url = e.url.split("v=");
+					url = url[url.length-1];
+					e.url = "https://www.youtube.com/watch?v="+url;
+				} else {
+					e.type = "video";
+					e.id = e.url.split("v=");
+					e.id = e.id[e.id.length-1];
+					e.url = "https://www.youtube.com/watch?v="+e.id;
+				}
+				
+				e.img = eu.fixUrlProtocol('https://www.youtube.com', (e.img.getAttribute('data-thumb'))?e.img.getAttribute('data-thumb'):e.img.getAttribute('src'));
+				return e;	
+			}
+			
+			function elementStr(e) {
+				
+				if (e.type == 'user') {
+					elementCounter = e.counter$+" subscribers";
+				} else if (e.type == 'list') {
+					elementCounter = e.counter$+" videos";
+				} else {
+					elementCounter = e.counter$;
+				}
+				
+				res = "<a class=\"element\" target=\"_blank\" href=\"" + e.url + "\">\
+							<div class=\"element-box\">\
+								<div class=\"element-image element-"+e.type+"\">\
+									<img src=\""+e.img+"\" alt=\""+e.title+"\" />\
+									<div class=\"element-counter\">"+elementCounter+"</div>\
+									</div>\
+									<div class=\"element-title\">"+e.title+"</div>\
+							</div>\
+						</a>";
+				return res;
+			}
+			
+			var ec;
+			
+			async function workSpace (search) {
+				searchElementsContainer = document.getElementById("search-elements-container");
+				searchElements = document.getElementById("search-elements");
+				
+				searchElements.innerHTML = "";
+				
+				var ml = new YouTubeJsObjectLists();
+				ec = await ml.search(search);
+				var e;
+				
+				while (e = ec.next()) {
+					 searchElements.innerHTML += elementStr(elementAttr(e));
+				}
+				
+				if (ec.nextPage()) {
+					nextButton = document.getElementById("search-paginator");
+					console.log(nextButton);
+					
+					if (nextButton == null) {
+						console.log(searchElementsContainer);
+						searchElementsContainer.innerHtml = "hola";
+						console.log(searchElementsContainer.innerHtml);
+					}
+				}
+			}
+
+
+			search = document.getElementById('search');
+			submit = document.getElementById('submit');
+			
+			submit.onclick = function(){
+				workSpace(search.value);
+			};
+		
+			search.onkeypress = function(key){
+				if (key.keyCode == 13 && search.value.length > 0) {
+					workSpace(search.value);
+				}
+			};
+
+			query = "pokemon playlist";
+			params = getParams();
+			params.q
+			if (params.q != undefined & params.q != null) {
+				query = params.q;
+			}
+			workSpace(query);
+		</script>
 	</body>
 </html>

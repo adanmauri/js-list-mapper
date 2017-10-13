@@ -1,0 +1,255 @@
+body {
+	background: #F1F1F1;
+}
+
+header {
+	background: #FFFFFF;
+	border-bottom: 1px solid #E8E8E8;
+	position: fixed;
+	top:0;
+	z-index: 5;
+	width: 100%;
+}
+
+header .header-container {
+	padding: 7px 30px 8px 30px;
+	height: 34px;
+}
+
+header .header-container .logo-container,
+header .header-container .search-container,
+header .header-container .submit-container {
+	height: 100%;
+	float: left;
+	padding-top: 3px;
+}
+
+
+header .header-container .logo-container img.logo {
+	height: 100%;
+}
+
+header .header-container .search-container {
+	padding-left: 60px;
+	width: 30%;
+}
+
+header .header-container .search-container input.search {
+	width: 100%;
+	height: 27px;
+	border: 1px solid #CCC;
+	box-shadow: inset 0 1px 2px #EEE;
+	transition: 0.3s all;
+	padding: 2px 6px;
+	position: relative;
+    z-index: 10;
+}
+
+header .header-container .search-container input.search:focus {
+	border-color: #1C62B9;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+header .header-container .submit-container {
+	margin-left: 13px;
+}
+
+header .header-container .submit-container .submit {
+	border: solid 1px transparent;
+	border-color: #d3d3d3;
+	border-left-color: #D3D3D3;
+    background: #F8F8F8;
+    color: #333;
+    width: 65px;
+	height: 31px;
+	cursor: pointer;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
+header .header-container .submit-container .submit:hover {
+    background: #F0F0F0;
+}
+
+header .header-container .submit-container .submit:active {
+    background: #E9E9E9;
+}
+
+
+header .header-container .submit-container .submit span {
+	border: none;
+	display: block;
+	opacity: .6;
+	padding: 0;
+	text-indent: -10000px;
+	background: no-repeat url(http://s.ytimg.com/yts/imgbin/www-hitchhiker-vfl-Nn88d.png) -694px -43px;
+	background-size: auto auto;
+	width: 15px;
+	height: 15px;
+	box-shadow: none;
+	margin: 8px 24px;
+}
+
+header .header-container .submit-container .submit:hover span,
+header .header-container .submit-container .submit:active span {
+	 opacity:1;
+}
+
+header .header-container .author-container {
+	float: right;
+	line-height: 34px;
+	font-family: Verdana, sans-serif;
+	color: #666;
+}
+
+.search-elements {
+	border: 1px solid #E8E8E8;
+	background: #FFF;
+	box-shadow: 0 1px 2px #EEE;
+}
+
+.element {
+	text-decoration: none;
+	font-family: Verdana, sans-serif;
+}
+
+.element .element-title {
+	color: #167ac6;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.element .element-title:hover {
+	text-decoration: underline;
+}
+
+.element-counter {
+    position: relative;
+    bottom: 31px;
+    text-align: right;
+    padding: 4px;
+    background: rgba(0,0,0,0.6);
+    color: #FFF;
+}
+
+
+@media (min-width: 778px) {
+
+}
+
+@media (min-width: 992px) and (max-width: 1999px) {
+	.element .element-image {
+		width: 292px;
+		height: 164px;
+	}
+
+	.element-counter {
+		bottom: 31px;
+		padding: 4px;
+	}
+	
+	.element .element-title {
+		color: #167ac6;
+		padding-top: 10px;
+		height: 58px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.search-elements-container {
+		width: 646px;
+	}
+	
+	.element .element-image {
+		width: 292px;
+		height: 164px;
+	}
+
+	.element-counter {
+		bottom: 31px;
+		padding: 4px;
+	}
+	
+	.element .element-title {
+		color: #167ac6;
+		padding-top: 10px;
+		height: 58px;
+	}
+	
+	header .header-container .author-container {
+		font-size: 13px;
+	}
+}
+
+@media (max-width: 767px) {
+	.search-elements-container {
+		width: 100%;
+	}
+
+	header .header-container .search-container {
+		width: 50%;
+	}
+
+	header .header-container .author-container {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		background: rgba(0,0,0,0.8);
+		color: #FFF;
+		width: 100%;
+		padding: 0 15px;
+		clear: both;
+		font-size: 13px;
+	}	
+	
+	.search-elements {
+		margin-left: 15px;
+		margin-right: 15px;
+		padding: 15px;
+	}
+	
+	.element {
+		clear:left;
+		width:100%;
+	}
+	
+	.element .element-title {
+		color: #167ac6;
+		padding-top: 10px;
+		height: 58px;
+	}
+
+	.element .element-image {
+		width: 100%;
+		height: 164px;
+		background: #F0F0F0;
+		border: 1px solid #E8E8E8;
+		position: relative;
+	}
+
+	.element .element-image img {
+		width: 100%;
+		height: auto;
+	}
+
+	.element .element-counter {
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		position: absolute;
+	}
+
+}
+
+@media (max-width: 568px) {
+	header .header-container {
+		padding-left:15px;
+		padding-right:15px;
+	}
+	
+
+	header .header-container .search-container {
+		width: 30%;
+		padding-left: 20px;
+	}
+}

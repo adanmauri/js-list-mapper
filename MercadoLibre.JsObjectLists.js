@@ -1,6 +1,6 @@
-class MercadoLibreObjectJsLists extends JsObjectLists {
+class MercadoLibreJsObjectLists extends JsObjectLists {
 	constructor(url){
-		var url = url || "http://www.mercadolibre.com.ar" ;
+		var url = url || "https://www.mercadolibre.com.ar" ;
 		var elementSelector = {
 			title: "//ol[@id='searchResults']/li//h2//span[@class='main-title']/text()",
 			price: "//ol[@id='searchResults']/li//span[@class='price-fraction']/text()",

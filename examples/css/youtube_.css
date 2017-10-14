@@ -102,7 +102,7 @@ header .header-container .author-container {
 	color: #666;
 }
 
-.search-elements {
+.search-elements-container {
 	border: 1px solid #E8E8E8;
 	background: #FFF;
 	box-shadow: 0 1px 2px #EEE;
@@ -132,6 +132,42 @@ header .header-container .author-container {
     color: #FFF;
 }
 
+.paginator {
+	text-align: right;
+	display: none;
+}
+
+.paginator .paginator-btn {
+	background: #f8f8f8;
+	color: #333;
+	border: solid 1px #ccc;
+	display: inline-block;
+	padding: 0 10px;
+	height: 28px;
+	padding: 0 10px;
+	font-weight: 800;
+	font-size: 11px;
+	line-height: 28px;
+	vertical-align: middle;
+	cursor: pointer;
+	border-radius: 2px;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+	font-family: Verdana, sans-serif;
+	
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+.paginator .paginator-btn:hover {
+	background: #f0f0f0;
+}
+
+.paginator .paginator-btn:active {
+	background: #f0f0f0;
+	border-color: #f0f0f0;
+}
 
 @media (min-width: 778px) {
 
@@ -152,6 +188,11 @@ header .header-container .author-container {
 		color: #167ac6;
 		padding-top: 10px;
 		height: 58px;
+	}
+	
+	.paginator {
+		width: 288px;
+		margin: auto;
 	}
 }
 

@@ -1,0 +1,175 @@
+body {
+	background: #F1F1F1;
+}
+
+header {
+	background: #FFFFFF;
+	border-bottom: 1px solid #E8E8E8;
+	height: 35px;
+	padding: 7px 0px;
+}
+
+header .header-container .logo-container {
+	background-image: url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_small_2x-vfl4_cFqn.png);
+	background-size: 100px;
+	background-position: 0 4px;
+	width: 160px;
+}
+
+header .header-container .search-container input.search {
+	width: 570px;
+	height: 23px;
+	border: 1px solid #CCC;
+	box-shadow: inset 0 1px 2px #EEE;
+	transition: 0.3s all;
+	padding: 2px 6px;
+    border-radius: 0;
+    margin-top: 3px;
+}
+
+header .header-container .search-container input.search:focus {
+	border-color: #1C62B9;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+header .header-container .submit-container .submit {
+	margin-top: 3px;
+	height: 27px;
+	border: solid 1px #D3D3D3;
+	border-left-color: transparent;
+    background: #F8F8F8;
+    color: #333;
+    width: 65px;
+	cursor: pointer;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
+header .header-container .submit-container .submit:hover {
+    background: #F0F0F0;
+}
+
+header .header-container .submit-container .submit:active {
+    background: #E9E9E9;
+}
+
+header .header-container .submit-container .submit span {
+	background: no-repeat url(http://s.ytimg.com/yts/imgbin/www-hitchhiker-vfl-Nn88d.png) -694px -43px;
+	background-size: auto auto;
+	width: 15px;
+	height: 15px;
+	display: block;
+	opacity: .6;
+	margin: 7px 24px
+}
+
+header .header-container .submit-container .submit:hover span,
+header .header-container .submit-container .submit:active span {
+	 opacity:1;
+}
+
+header .header-container .author-container {
+	line-height: 34px;
+	font-family: Verdana, sans-serif;
+	color: #666;
+	font-size: 12px;
+	margin-top:2px;
+}
+
+
+.paginator {
+	text-align: right;
+	display: none;
+}
+
+.paginator .paginator-btn {
+	background: #f8f8f8;
+	color: #333;
+	border: solid 1px #ccc;
+	display: inline-block;
+	padding: 0 10px;
+	height: 28px;
+	padding: 0 10px;
+	font-weight: 800;
+	font-size: 11px;
+	line-height: 28px;
+	vertical-align: middle;
+	cursor: pointer;
+	border-radius: 2px;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+	font-family: Verdana, sans-serif;
+	
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+.paginator .paginator-btn:hover {
+	background: #f0f0f0;
+}
+
+.paginator .paginator-btn:active {
+	background: #f0f0f0;
+	border-color: #f0f0f0;
+}
+
+@media (min-width: 768px) {
+	header .header-container {
+		margin: 0px 62px;
+	}
+	
+	header .header-container .search-container {
+		margin-left: 7px;
+	}
+	
+	header .header-container .author-container {
+		float: right;
+		line-height: 34px;
+		font-family: Verdana, sans-serif;
+		color: #666;
+		font-size: 12px;
+		margin-top:2px;
+	}
+	.paginator {
+		width: 288px;
+		margin: auto;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {	
+	header .header-container {
+		margin: 0px 60px;
+	}
+	
+	header .header-container .search-container input.search {
+		width: 400px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {	
+	header .header-container {
+		margin: 0px 60px;
+	}
+
+	header .header-container .logo-container {
+		width: 120px;
+	}	
+
+	header .header-container .search-container input.search {
+		width: 214px;
+	}
+}
+
+@media (max-width: 767px) {
+	header .header-container .logo-container {
+		background-image: url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo_2x-vflXx5Pg3.png);
+		width: 54px;
+		background-size: 42px;
+		background-position: 5px 3px;
+	}
+	
+	header .header-container .search-container input.search {
+		width: 200px;
+	}
+}

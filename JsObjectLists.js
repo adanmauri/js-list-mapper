@@ -405,9 +405,8 @@ class ElementCollection {
 			eu = new ElementUtilities();
             this.url = eu.getUrl((xpathResult.snapshotItem(0).nodeValue)?xpathResult.snapshotItem(0).nodeValue:xpathResult.snapshotItem(0), this.baseUrl);
         }catch(err) {
-            console.error("The XPath query is not getting valid element (non-existent or null)");
+			this.url = false;
         }
-
         return this.url;
     }
 
@@ -421,7 +420,10 @@ class ElementCollection {
      */
     async getNext(selector, context) {
         var url = this.loadUrl(context);
-        return new ElementCollection(selector, await this.loadNext(url), new ElementPaginator(this.selector, this.baseUrl, this.pageNumber+1));
+        if (url) {
+			return new ElementCollection(selector, await this.loadNext(url), new ElementPaginator(this.selector, this.baseUrl, this.pageNumber+1));
+		}
+		return false;
     }
 
     /* loadNext
@@ -466,6 +468,7 @@ class ElementUtilities {
         };
 
         try {
+			
 			return await fetch(url, params);
         } catch(err) {
 			console.error("The next page could not be loaded");
@@ -481,6 +484,7 @@ class ElementUtilities {
 	 * Return: todo
 	 */
 	async htmlRequest(url, method='GET') {
+		
         var response = await (await this.request(url, method)).text();
 		if (response) {
             var parser = new DOMParser();
@@ -499,21 +503,32 @@ class ElementUtilities {
 		return (route.lastIndexOf("http://") == 0) || (route.lastIndexOf("https://") == 0) || (route.lastIndexOf("//") == 0);
 	}
 
-	/* getBaseUrl (TIENE SENTIDO?)
+	/* getBaseUrl
 	 * ----------
 	 * Returns the base url of a route
 	 * Params:
-	 * - route: String
-	 * - url: String (optional)
+	 * - url: String
+	 * - route: String (optional)
 	 * Return: a String
 	 *
 	 */
-	getBaseUrl(route, url) {
-		if (url) {
-			return url.union(route);
-		}else {
-			return route;
+	getBaseUrl(url, route = false) {
+		var n; 
+		if (route) {
+			if (route[0] == "?") {
+				n = url.lastIndexOf("?");
+			} else if (route[0] == "/") {
+				n = url.lastIndexOf("/");
+			} else {
+				n = url.lastIndexOf("?");
+			}
+		} else {
+			n = url.lastIndexOf("?");
 		}
+		if (n < 0 || n < 'https://'.length) {
+			n = url.length;
+		}
+		return url.substring(0, n);
 	}
 
 	/* getUrl
@@ -526,8 +541,10 @@ class ElementUtilities {
 	 *
 	 */
 	getUrl(route, url) {
-		url = url || '';
-		return url.union(route);
+		if (url && !this.isAbsolutePath(route)) {
+			return this.getBaseUrl(url,route).union(route);
+		}
+		return route;
 	}
 	
     /* Fix Protocol. 

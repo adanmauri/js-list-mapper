@@ -3,15 +3,15 @@
 	<head>
 		<title>YouTube</title>
 		
+		<meta charset="utf-8" >
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		
 		<link rel="shortcut icon" href="https://s.ytimg.com/yts/img/favicon-vfl8qSV2F.ico" type="image/x-icon">
 		<link rel="icon" href="https://s.ytimg.com/yts/img/favicon.ico" type="image/x-icon">
 		
-		<meta charset="utf8" >
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<script src="../JsObjectLists.js" ></script>
-		<script src="../YouTube.JsObjectLists.js" ></script>
-		<link rel="stylesheet" type="text/css" href="css/base.css" />
-		<link rel="stylesheet" type="text/css" href="css/youtube.css" />
+		<link rel="stylesheet" type="text/css" href="css/base.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/youtube.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/youtube.non-w3c.css" />
 	</head>
 	<body>
 		<header>
@@ -35,6 +35,8 @@
 			</div>
 		</div>
 	
+		<script src="../JsObjectLists.js" ></script>
+		<script src="../YouTube.JsObjectLists.js" ></script>
 		<script>
 			function elementAttr(e) {
 				eu = new ElementUtilities();
@@ -93,7 +95,6 @@
 				paginator = document.getElementById("paginator");
 				paginator.style.display = "none";
 			}
-			
 			
 			async function workSpace (ec, search) {
 				var ml = new YouTubeJsObjectLists();

@@ -1,0 +1,174 @@
+body {
+	background: #E4E4E9;
+}
+
+header {
+	background: #FFFFFF;
+	border-bottom: 5px solid #414143;
+	height: 60px;
+}
+
+header .header-container .logo-container {
+	background-image: url(https://www.autocosmos.com.ar/Content/Master/Images/autocosmos_small.png);
+	background-position: 0 6px;
+	width: 180px;
+	margin-left: 100px;
+}
+
+header .header-container .search-container input.search {
+	width: 570px;
+	height: 35px;
+	border: 1px solid #CCC;
+	box-shadow: inset 0 1px 2px #EEE;
+	color: #424142;
+	padding: 2px 6px;
+    border-radius: 0;
+    margin-top: 10px;
+}
+
+header .header-container .submit-container .submit {
+	margin-top: 11px;
+	margin-left: 10px;
+	height: 36px;
+	width: 36px;
+	border: solid 1px #b2afaf;
+    background: transparent;
+    color: #333;
+
+	cursor: pointer;
+	border-radius: 20px;
+}
+
+header .header-container .submit-container .submit span {
+	background: no-repeat url(../img/autocosmos_search.png);
+	background-size: 20px 20px;
+	display: block;
+	background-position: 8px;
+}
+
+header .header-container .author-container {
+	line-height: 60px;
+	font-family: Verdana, sans-serif;
+	color: #666;
+	font-size: 12px;
+	margin-right: 20px;
+}
+
+.search-elements-container {
+	background: none;
+}
+
+.element {
+	background: #FFF;
+	margin: 15px;
+	padding: 0;
+}
+
+.element:hover {
+	box-shadow:0 0 6px 0 #323232;
+	box-shadow:0 0 6px 0 rgba(50,50,50,.75);
+}
+
+.element .element-image {
+	float: left;
+	text-align: left;
+}
+	
+.element .element-title {
+	float: left;
+	padding: 15px 10px 0 10px;
+	color: #595959;
+	font-size: 14px;
+	overflow: hidden;
+}
+
+.element .element-title:hover {
+	text-decoration: none;
+}
+
+.element .element-price {
+	float: left;
+	height: 29px;
+	line-height: 29px;
+	padding: 0 10px;
+	font-size: 14px;
+	color: #595959;
+	font-weight: bold;
+}
+
+.element {
+	width: 455px;
+}
+
+.element .element-image {
+	width: 227px;
+	height: 164px;
+}
+
+.element .element-title {
+	width: 208px;
+	height: 120px;
+}
+
+.element .element-price {
+	width: 208px;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {	
+	header .header-container .search-container input.search {
+		width: 370px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {	
+	header .header-container .logo-container {
+		margin-left: 60px;
+	}
+
+	header .header-container .search-container input.search {
+		width: 214px;
+	}
+}
+
+@media (max-width: 767px) {
+	header .header-container .logo-container {
+		margin-left: 10px;
+	}
+	
+	header .header-container .search-container input.search {
+		width: 200px;
+	}
+	header .header-container .author-container {
+		color: #FFF;
+	}
+	
+	.element {
+		float:left;
+		width: 455px;
+	}
+	
+	.element .element-title {
+		color: #595959;
+		padding-top: 15px;
+		
+		width: 208px;
+		height: 120px;
+	}
+
+	.element .element-image {
+		width: 227px;
+		height: 164px;
+		background: none;
+		border: none;
+		position: static;
+	}
+
+	.element .element-image img {
+		width: auto;
+		height: 100%;
+	}
+
+	.element .element-price {
+		width: 208px;
+	}
+}

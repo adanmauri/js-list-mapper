@@ -97,12 +97,7 @@ header .header-container .author-container {
 	cursor: pointer;
 	border-radius: 2px;
 	box-shadow: 0 1px 0 rgba(0,0,0,0.05);
-	font-family: Verdana, sans-serif;
-	
-	-webkit-user-select: none; /* Safari */        
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+/Edge */
-	user-select: none; /* Standard */
+	font-family: Verdana, sans-serif;	
 }
 
 .paginator .paginator-btn:hover {
@@ -171,5 +166,9 @@ header .header-container .author-container {
 	
 	header .header-container .search-container input.search {
 		width: 200px;
+	}
+	
+	header .header-container .author-container {
+		color: #FFF;
 	}
 }

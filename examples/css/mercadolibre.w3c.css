@@ -153,5 +153,8 @@ header .header-container .author-container {
 		background-position: 14px 10px;
 	}
 
+	header .header-container .author-container {
+		color: #FFF;
+	}
 }
 

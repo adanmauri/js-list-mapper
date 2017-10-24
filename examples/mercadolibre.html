@@ -10,6 +10,8 @@
 		<link rel="icon" href="http://static.mlstatic.com/org-img/chico/img/favicon.ico" type="image/x-icon">
 		
 		<link rel="stylesheet" type="text/css" href="css/base.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/header.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/element.w3c.css" />
 		<link rel="stylesheet" type="text/css" href="css/mercadolibre.w3c.css" />
 	</head>
 	<body>
@@ -31,29 +33,29 @@
 			<div class="search-elements clearfix" id="search-elements"></div>
 		</div>
 	
-		<script src="../JsObjectLists.js" ></script>
-		<script src="../MercadoLibre.JsObjectLists.js" ></script>
+		<script src="../JsListMapper.js" ></script>
+		<script src="../plugins/MercadoLibre.JsListMapper.js" ></script>
 		<script>
 			function elementAttr(e) {
 				e.img = e.img['src']?e.img['src']:e.img.title;	
 				return e;	
 			}
+			
 			function elementStr(e) {
-								
-				res = "<a class=\"element\" target=\"_blank\" href=\"" + e.url + "\">\
-							<div class=\"element-box\">\
-								<div class=\"element-image element-meli\" >\
-									<img src=\""+e.img+"\" alt=\""+e.title+"\" />\
-									<div class=\"element-counter\"> $"+e.price+"</div>\
-									</div>\
-									<div class=\"element-title\">"+e.title+"</div>\
-							</div>\
-						</a>";
+				res = `<a class="element" target="_blank" href="` + e.url + `">
+							<div class="element-box clearfix">
+								<div class="element-image element-meli" >
+									<img src="`+e.img+`" alt="`+e.title+`" />
+									<div class="element-counter"> $`+e.price+`</div>
+								</div>
+								<div class="element-title">`+e.title+`</div>
+							</div>
+						</a>`;
 				return res;
 			}
 			
 			async function workSpace (search) {
-				var ml = new MercadoLibreJsObjectLists();
+				var ml = new MercadoLibreJsListMapper();
 				ec = await ml.search(search);
 				
 				if (!onScrollSet) {
@@ -103,28 +105,27 @@
 				
 				submit.onclick = function(){
 					if (search.value.length > 0) {
-						workSpace(ec, search.value);
+						workSpace(search.value);
 					}
 				};
 				search.onkeypress = function(key){
 					if (key.keyCode == 13 && search.value.length > 0) {
-						workSpace(ec, search.value);
+						workSpace(search.value);
 					}
 				};
 			}
 			
-			onScrollSet = false;
-			scroll = true;
-			query = "gameboy";
-			params = getParams();
-			params.q
-			if (params.q != undefined & params.q != null) {
-				query = params.q;
-			}
-
-			var ec;
-			setup(ec);
-			workSpace(query);
+			var onScrollSet = false;
+			var scroll = true;
+			var eu = new ElementUtilities();
+            var params = eu.getParameters();
+            var query = "gameboy";
+            if (params.q != undefined & params.q != null) {
+                query = params.q;
+            }
+            
+            setup();
+            workSpace(query);
 		</script>
 	</body>
 </html>

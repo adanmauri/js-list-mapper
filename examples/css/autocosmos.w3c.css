@@ -62,6 +62,8 @@ header .header-container .author-container {
 	background: #FFF;
 	margin: 15px;
 	padding: 0;
+	float:left;
+	width: 455px;
 }
 
 .element:hover {
@@ -72,6 +74,12 @@ header .header-container .author-container {
 .element .element-image {
 	float: left;
 	text-align: left;
+	width: 227px;
+	height: 164px;
+	background: none;
+	border: none;
+	position: static;
+	overflow: hidden;
 }
 	
 .element .element-title {
@@ -80,6 +88,11 @@ header .header-container .author-container {
 	color: #595959;
 	font-size: 14px;
 	overflow: hidden;
+	color: #595959;
+	padding-top: 15px;	
+	width: 208px;
+	height: 120px;
+	font-family: Verdana, sans-serif;
 }
 
 .element .element-title:hover {
@@ -94,24 +107,14 @@ header .header-container .author-container {
 	font-size: 14px;
 	color: #595959;
 	font-weight: bold;
-}
-
-.element {
-	width: 455px;
-}
-
-.element .element-image {
-	width: 227px;
-	height: 164px;
-}
-
-.element .element-title {
 	width: 208px;
-	height: 120px;
+	font-family: Verdana, sans-serif;
 }
 
-.element .element-price {
-	width: 208px;
+
+.element .element-image img {
+	width: auto;
+	height: 100%;
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {	
@@ -140,35 +143,5 @@ header .header-container .author-container {
 	}
 	header .header-container .author-container {
 		color: #FFF;
-	}
-	
-	.element {
-		float:left;
-		width: 455px;
-	}
-	
-	.element .element-title {
-		color: #595959;
-		padding-top: 15px;
-		
-		width: 208px;
-		height: 120px;
-	}
-
-	.element .element-image {
-		width: 227px;
-		height: 164px;
-		background: none;
-		border: none;
-		position: static;
-	}
-
-	.element .element-image img {
-		width: auto;
-		height: 100%;
-	}
-
-	.element .element-price {
-		width: 208px;
 	}
 }

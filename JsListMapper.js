@@ -19,58 +19,21 @@ String.prototype.union = function(anotherStr) {
 	return str;
 }
 
-function getParams() {
-	params = window.location.search.substring(1,window.location.search.length);
-	params = params.split('&');
-	result = {};
-	for (i=0; i < params.length; i++) {
-		aux = params[i].split('=');
-		if (aux[0].length > 0) {
-			result[aux[0]] = (aux.length > 1)?aux[1]:null;
-		}
-	}
-	return result;
-}
-
-/*
-String.prototype.complement = function(anotherStr) {
-	tmpStr = this;
-	tmpAnotherStr = anotherStr;
-
-	if (tmpStr.length < tmpAnotherStr.length) {
-		tmpAnotherStr = tmpAnotherStr.substring(0,tmpStr.length);
-	} else if (tmpAnotherStr.length < tmpStr.length) {
-		tmpStr = tmpStr.substring(tmpStr.length-tmpAnotherStr.length, tmpStr.length);
-	}
-
-	do {
-		if (tmpStr.includes(tmpAnotherStr)) {
-			break;
-		}
-		tmpStr = tmpStr.substring(1,tmpStr.length);
-		tmpAnotherStr = tmpAnotherStr.substring(0,tmpAnotherStr.length-1);
-	} while (tmpStr.length > 0 & tmpAnotherStr.length > 0);
-	
-	console.log(anotherStr.length+" "+anotherStr);
-	console.log(tmpAnotherStr.length+" "+tmpAnotherStr);
-	console.log(anotherStr.length-tmpAnotherStr.length);
-	console.log(this.length+" "+this);
-	
-	
-	return this.substring(0, anotherStr.length-tmpAnotherStr.length);
-}*/
-
-// window.prompt("Copy to clipboard: Ctrl+C, Enter", this.context.body.outerHTML);
-// DOCUMENTAR ELEMENTOS OPCIONALES
-// DOCUMENTAR QUERIES
-
-
 /* =======================
- * Js Object Lists
+ * Js List Mapper
  * =======================
  */
-class JsObjectLists {
+class JsListMapper {
 
+	/* Constructor
+	 * -----------
+	 * Params:
+	 * - url: String
+	 * - elementSelector: ElementSelector
+	 * - paginatorSelector: PaginatorSelector (optional)
+	 * - searchSelector: SearchSelector (optional)
+	 * Return: an JsListMapper object
+	 */
 	constructor(url, elementSelector, paginatorSelector, searchSelector){
 		this.url 			   = url;
 		this.elementSelector   = elementSelector;
@@ -78,6 +41,11 @@ class JsObjectLists {
 		this.searchSelector    = searchSelector;
 	}
 
+	/* search
+     * -----------
+     * Returns an ElementCollection object from an url
+     * Return: an ElementCollection object
+     */
 	async search(search){
 		var selector = new ElementSelector(this.elementSelector);
 		var collection = new ElementCollection(selector);
@@ -109,7 +77,7 @@ class ElementSelector {
 	 * Params:
 	 * - selector: Object (XPaths queries)
 	 * - context: String (HTML document) (optional)
-	 * - baseUrl: String (An url) (optional)
+	 * - baseUrl: String (url) (optional)
 	 * Return: an ElementSelector Object
 	 */
 	constructor(selector, context, baseUrl) {
@@ -442,130 +410,6 @@ class ElementCollection {
 }
 
 /* =======================
- * ElementUtilities Class
- * =======================
- */
-class ElementUtilities {
-	
-	/* request
-	 * -------
-	 * TODO
-	 * Return: todo
-	 */
-	async request(url, method='GET') {
-        //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-        
-        //document.cookie="PREF='f1=50000000&f6=8&f5=30';;path=/;domain=.youtube.com;expires=Thu, 2 Aug 2020 20:47:11 UTC";
-        
-        var headers = new Headers();
-        var params = {
-				method: 'GET',
-				headers: headers,
-				mode: 'cors',
-				cache: 'default',
-				method: method,
-				credentials: 'include'
-        };
-
-        try {
-			
-			return await fetch(url, params);
-        } catch(err) {
-			console.error("The next page could not be loaded");
-            console.log("URL: " + url);
-            console.log(err);
-			return null;
-		}	
-	}
-
-	/* request
-	 * -------
-	 * TODO
-	 * Return: todo
-	 */
-	async htmlRequest(url, method='GET') {
-		
-        var response = await (await this.request(url, method)).text();
-		if (response) {
-            var parser = new DOMParser();
-			response = parser.parseFromString(response, "text/html");
-		}
-
-		return response;
-	}
-	
-	/* isAbsolutePath
-	 * -------
-	 * Returns if a path is absolutebsolute
-	 * Return: a Boolean
-	 */
-	isAbsolutePath(route) {
-		return (route.lastIndexOf("http://") == 0) || (route.lastIndexOf("https://") == 0) || (route.lastIndexOf("//") == 0);
-	}
-
-	/* getBaseUrl
-	 * ----------
-	 * Returns the base url of a route
-	 * Params:
-	 * - url: String
-	 * - route: String (optional)
-	 * Return: a String
-	 *
-	 */
-	getBaseUrl(url, route = false) {
-		var n; 
-		if (route) {
-			if (route[0] == "?") {
-				n = url.lastIndexOf("?");
-			} else if (route[0] == "/") {
-				n = url.lastIndexOf("/");
-			} else {
-				n = url.lastIndexOf("?");
-			}
-		} else {
-			n = url.lastIndexOf("?");
-		}
-		if (n < 0 || n < 'https://'.length) {
-			n = url.length;
-		}
-		return url.substring(0, n);
-	}
-
-	/* getUrl
-	 * ------
-	 * Returns the url
-	 * Params:
-	 * - route: String
-	 * - url: String (optional)
-	 * Return: a String
-	 *
-	 */
-	getUrl(route, url) {
-		if (url && !this.isAbsolutePath(route)) {
-			return this.getBaseUrl(url,route).union(route);
-		}
-		return route;
-	}
-	
-    /* Fix Protocol. 
-     * -------------
-     * fetch no work with // (File protocol)
-     * Params:
-     * - url: String (URL)
-     * - sendUrl: String (URL)
-     * Return: a String (URL) with original protocol
-     */
-    fixUrlProtocol(url, sendUrl) {
-        var urlObject = new URL(url);
-
-        if (sendUrl.startsWith("//")){
-            return (sendUrl.indexOf('://') === -1) ? urlObject.protocol + sendUrl : sendUrl;
-        }else{
-            return sendUrl;
-        }        
-    }
-}
-/* =======================
  * ElementSearch Class
  * =======================
  */
@@ -711,7 +555,7 @@ class ElementUtilities {
     /* searchRequest
      * -------------
      * Permorms search
-     * Return: an ElementCollection
+     * Return: an ElementCollection object
      */
     async searchRequest() {
 		var response;
@@ -809,4 +653,149 @@ class ElementUtilities {
         }
         return q.join("&");
     }
+}
+
+/* =======================
+ * ElementUtilities Class
+ * =======================
+ */
+class ElementUtilities {
+	
+	/* request
+	 * -------
+	 * Generate a request and return the response
+	 * Params:
+	 * - url: String
+	 * - method: String (GET or POST) (optional)
+	 * Return: a HTTP response
+	 */
+	async request(url, method='GET') {
+        var headers = new Headers();
+        var params = {
+				method: 'GET',
+				headers: headers,
+				mode: 'cors',
+				cache: 'default',
+				method: method,
+				credentials: 'include'
+        };
+
+        try {
+			
+			return await fetch(url, params);
+        } catch(err) {
+			console.error("The next page could not be loaded");
+            console.log("URL: " + url);
+            console.log(err);
+			return null;
+		}	
+	}
+
+	/* request
+	 * -------
+	 * Generate a request and return the response as html document
+	 * Params:
+	 * - url: String
+	 * - method: String (GET or POST) (optional)
+	 * Return: a HTTP response as html document
+	 */
+	async htmlRequest(url, method='GET') {
+        var response = await (await this.request(url, method)).text();
+		if (response) {
+            var parser = new DOMParser();
+			response = parser.parseFromString(response, "text/html");
+		}
+		return response;
+	}
+	
+	/* isAbsolutePath
+	 * -------
+	 * Returns if a path is absolute
+	 * Return: a Boolean
+	 */
+	isAbsolutePath(route) {
+		return (route.lastIndexOf("http://") == 0) || (route.lastIndexOf("https://") == 0) || (route.lastIndexOf("//") == 0);
+	}
+
+	/* getBaseUrl
+	 * ----------
+	 * Returns the base url of a route
+	 * Params:
+	 * - url: String
+	 * - route: String (optional)
+	 * Return: a String
+	 *
+	 */
+	getBaseUrl(url, route = false) {
+		var n; 
+		if (route) {
+			if (route[0] == "?") {
+				n = url.lastIndexOf("?");
+			} else if (route[0] == "/") {
+				n = url.lastIndexOf("/");
+			} else {
+				n = url.lastIndexOf("?");
+			}
+		} else {
+			n = url.lastIndexOf("?");
+		}
+		if (n < 0 || n < 'https://'.length) {
+			n = url.length;
+		}
+		return url.substring(0, n);
+	}
+
+	/* getUrl
+	 * ------
+	 * Returns the url
+	 * Params:
+	 * - route: String
+	 * - url: String (optional)
+	 * Return: a String
+	 *
+	 */
+	getUrl(route, url) {
+		if (url && !this.isAbsolutePath(route)) {
+			return this.getBaseUrl(url,route).union(route);
+		}
+		return route;
+	}
+	
+    /* fixUrlProtocol
+     * --------------
+     * Return an url that work with fetch (fetch does not work with //, the file protocol)
+     * Params:
+     * - url: String (url)
+     * - sendUrl: String (url)
+     * Return: a String (url) with original protocol
+     */
+    fixUrlProtocol(url, sendUrl) {
+        var urlObject = new URL(url);
+
+        if (sendUrl.startsWith("//")){
+            return (sendUrl.indexOf('://') === -1) ? urlObject.protocol + sendUrl : sendUrl;
+        }else{
+            return sendUrl;
+        }        
+    }
+    
+    /* getParameters 
+     * -------------
+     * Returns get request parameters
+     * Return: a Object with get request parameters
+     */
+    getParameters(win = window) {
+		var params = win.location.search.substring(1, win.location.search.length);
+		var result = {};
+		var aux;
+		var i;
+		params = params.split('&');
+		for (i=0; i < params.length; i++) {
+			aux = params[i].split('=');
+			if (aux[0].length > 0) {
+				result[aux[0]] = (aux.length > 1)?aux[1]:null;
+			}
+		}
+		return result;
+	}
 }

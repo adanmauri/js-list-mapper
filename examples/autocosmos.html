@@ -1,104 +1,102 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>AutoCosmos</title>
-		
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		
-		<link rel="shortcut icon" href="https://www.autocosmos.com.ar/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="https://www.autocosmos.com.ar/favicon.ico" type="image/x-icon">
-		
-		<link rel="stylesheet" type="text/css" href="css/base.w3c.css" />
-		<link rel="stylesheet" type="text/css" href="css/autocosmos.w3c.css" />
-	</head>
-	<body>
-		<header>
-			<div class="header-container clearfix">
-				<div class="logo-container"></div>
-				<div class="search-container">
-					<input class="search" id="search" type="text" placeholder="Search" />
-				</div>
-				<div class="submit-container" >
-					<div id="submit" class="submit"><span>Search</span></div>
-				</div>
-				<div class="author-container" >
-					Adán Mauri Ungaro - Pablo Costanzo
-				</div>
-			</div>
-		</header>
-		<div class="search-elements-container" id="search-elements-container" >
-			<div class="search-elements clearfix" id="search-elements"></div>
-		</div>
+    <head>
+        <title>AutoCosmos</title>
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        
+        <link rel="shortcut icon" href="https://www.autocosmos.com.ar/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://www.autocosmos.com.ar/favicon.ico" type="image/x-icon">
+        
+        <link rel="stylesheet" type="text/css" href="css/base.w3c.css" />
+        <link rel="stylesheet" type="text/css" href="css/header.w3c.css" />
+        <link rel="stylesheet" type="text/css" href="css/autocosmos.w3c.css" />
+    </head>
+    <body>
+        <header>
+            <div class="header-container clearfix">
+                <div class="logo-container"></div>
+                <div class="search-container">
+                    <input class="search" id="search" type="text" placeholder="Search" />
+                </div>
+                <div class="submit-container" >
+                    <div id="submit" class="submit"><span>Search</span></div>
+                </div>
+                <div class="author-container" >
+                    Adán Mauri Ungaro - Pablo Costanzo
+                </div>
+            </div>
+        </header>
+        <div class="search-elements-container" id="search-elements-container" >
+            <div class="search-elements clearfix" id="search-elements"></div>
+        </div>
 
-		<script src="../JsObjectLists.js" ></script>
-		<script src="../AutoCosmos.JsObjectLists.js" ></script>	
-		<script>
-			function elementAttr(e, ac) {
-				eu = new ElementUtilities();
-				
-				e.url = eu.getBaseUrl(ac.url, e.url).union(e.url);
-				return e;
-			}
-			
-			function elementStr(e) {
-				res = "<a class=\"element\" target=\"_blank\" href=\"" + e.url + "\">\
-							<div class=\"element-box\">\
-								<div class=\"element-image element-meli\" >\
-									<img src=\""+e.img+"\" alt=\""+e.title+"\" />\
-								</div>\
-								<div class=\"element-title\">"+e.title+"</div>\
-								<div class=\"element-price\"> "+e.price+"</div>\
-							</div>\
-						</a>";
-				return res;
-			}
-			
-			async function workSpace (search) {
-				var ac = new AutoCosmosJsObjectLists();
-				ec = await ac.search(search);
-				await loadElements(true, ac);
-			}
-			
-			async function loadElements(clear = false, ac) {
-				var searchElements = document.getElementById("search-elements");
-				var e;
-				
-				if (clear) {
-					searchElements.innerHTML = "";
-				}
-				
-				while (e = ec.next()) {
-					 searchElements.innerHTML += elementStr(elementAttr(e, ac));
-				}
-			}
-			
-			function setup() {
-				var search = document.getElementById("search");
-				var submit = document.getElementById("submit");
-				
-				submit.onclick = function(){
-					if (search.value.length > 0) {
-						workSpace(search.value);
-					}
-				};
-				search.onkeypress = function(key){
-					if (key.keyCode == 13 && search.value.length > 0) {
-						workSpace(search.value);
-					}
-				};
-			}
-			
-			query = "passat";
-			params = getParams();
-			params.q
-			if (params.q != undefined & params.q != null) {
-				query = params.q;
-			}
-
-			var ec;
-			setup(ec);
-			workSpace(query);
-		</script>
-	</body>
+        <script src="../JsListMapper.js" ></script>
+        <script src="../plugins/AutoCosmos.JsListMapper.js" ></script>    
+        <script>
+            function elementAttr(e, ac) {
+                e.url = eu.getBaseUrl(ac.url, e.url).union(e.url);
+                return e;
+            }
+            
+            function elementStr(e) {
+                res = `<a class="element" target="_blank" href="` + e.url + `">
+                            <div class="element-box">
+                                <div class="element-image" >
+                                    <img src="`+e.img+`" alt="`+e.title+`" />
+                                </div>
+                                <div class="element-title">`+e.title+`</div>
+                                <div class="element-price">`+e.price+`</div>
+                            </div>
+                        </a>`;
+                return res;
+            }
+            
+            async function workSpace (search) {
+                var ac = new AutoCosmosJsListMapper();
+                ec = await ac.search(search);
+                await loadElements(true, ac);
+            }
+            
+            async function loadElements(clear = false, ac) {
+                var searchElements = document.getElementById("search-elements");
+                var e;
+                
+                if (clear) {
+                    searchElements.innerHTML = "";
+                }
+                
+                while (e = ec.next()) {
+                     searchElements.innerHTML += elementStr(elementAttr(e, ac));
+                }
+            }
+            
+            function setup() {
+                var search = document.getElementById("search");
+                var submit = document.getElementById("submit");
+                
+                submit.onclick = function(){
+                    if (search.value.length > 0) {
+                        workSpace(search.value);
+                    }
+                };
+                search.onkeypress = function(key){
+                    if (key.keyCode == 13 && search.value.length > 0) {
+                        workSpace(search.value);
+                    }
+                };
+            }
+            
+            var eu = new ElementUtilities();
+            var params = eu.getParameters();
+            var query = "passat";
+            if (params.q != undefined & params.q != null) {
+                query = params.q;
+            }
+            
+            setup();
+            workSpace(query);
+        </script>
+    </body>
 </html>

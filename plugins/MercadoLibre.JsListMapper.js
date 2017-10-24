@@ -1,4 +1,12 @@
-class MercadoLibreJsObjectLists extends JsObjectLists {
+class MercadoLibreJsListMapper extends JsListMapper {
+	
+	/* Constructor
+	 * -----------
+	 * Params:
+	 * - url: String (optional)
+	 * 
+	 * Return: an JsListMapper object
+	 */
 	constructor(url){
 		var url = url || "https://www.mercadolibre.com.ar" ;
 		var elementSelector = {

@@ -10,6 +10,8 @@
 		<link rel="icon" href="https://s.ytimg.com/yts/img/favicon.ico" type="image/x-icon">
 		
 		<link rel="stylesheet" type="text/css" href="css/base.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/header.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/element.w3c.css" />
 		<link rel="stylesheet" type="text/css" href="css/youtube.w3c.css" />
 		<link rel="stylesheet" type="text/css" href="css/youtube.non-w3c.css" />
 	</head>
@@ -35,39 +37,38 @@
 			</div>
 		</div>
 	
-		<script src="../JsObjectLists.js" ></script>
-		<script src="../YouTube.JsObjectLists.js" ></script>
+		<script src="../JsListMapper.js" ></script>
+		<script src="../plugins/YouTube.JsListMapper.js" ></script>
 		<script>
 			function elementAttr(e) {
-				eu = new ElementUtilities();
-				
 				if (e.url.includes("&ai=")) {
 					e.type = "ad";
-				} else if (e.url.includes("user")) {
-					e.type = "user";
-					e.id = e.url.split("user/");
-					e.id = e.id[e.id.length-1];
-					e.url = "https://www.youtube.com/user/"+e.id;
-				} else if (e.url.includes("list=")) {
-					e.type = "list";
-					e.id = e.url.split("list=");
-					e.id = e.id[e.id.length-1];
-					
-					url = e.url.split("v=");
-					url = url[url.length-1];
-					e.url = "https://www.youtube.com/watch?v="+url;
 				} else {
-					e.type = "video";
-					e.id = e.url.split("v=");
-					e.id = e.id[e.id.length-1];
-					e.url = "https://www.youtube.com/watch?v="+e.id;
+					url = "https://www.youtube.com/";
+					if (e.url.includes("user")) {
+						e.type = "user";
+						e.id = e.url.split("user/");
+						e.id = e.id[e.id.length-1];
+						e.url = url+"user/"+e.id;
+					} else if (e.url.includes("list=")) {
+						e.type = "list";
+						e.id = e.url.split("list=");
+						e.id = e.id[e.id.length-1];
+						url = e.url.split("v=");
+						url = url[url.length-1];
+						e.url = url+"watch?v="+url;
+					} else {
+						e.type = "video";
+						e.id = e.url.split("v=");
+						e.id = e.id[e.id.length-1];
+						e.url = url+"watch?v="+e.id;
+					}
 				}
-				
 				e.img = eu.fixUrlProtocol('https://www.youtube.com', (e.img.getAttribute('data-thumb'))?e.img.getAttribute('data-thumb'):e.img.getAttribute('src'));
 				return e;	
 			}
+			
 			function elementStr(e) {
-				
 				if (e.type == 'user') {
 					elementCounter = e.counter$+" subscribers";
 				} else if (e.type == 'list') {
@@ -76,39 +77,40 @@
 					elementCounter = e.counter$;
 				}
 				
-				res = "<a class=\"element\" target=\"_blank\" href=\"" + e.url + "\">\
-							<div class=\"element-box\">\
-								<div class=\"element-image element-"+e.type+"\">\
-									<img src=\""+e.img+"\" alt=\""+e.title+"\" />\
-									<div class=\"element-counter\">"+elementCounter+"</div>\
-									</div>\
-									<div class=\"element-title\">"+e.title+"</div>\
-							</div>\
-						</a>";
+				res = `<a class="element" target="_blank" href="` + e.url + `">
+							<div class="element-box clearfix">
+								<div class="element-image element-`+e.type+`">
+									<img src="`+ e.img +`" alt="`+e.title+`" />
+									<div class="element-counter">`+elementCounter+`</div>
+								</div>
+								<div class="element-title">`+e.title+`</div>
+							</div>
+						</a>`;
 				return res;
 			}
+			
 			function showPaginator() {
 				paginator = document.getElementById("paginator");
 				paginator.style.display = "block";
-			}			
+			}
+					
 			function hidePaginator() {
 				paginator = document.getElementById("paginator");
 				paginator.style.display = "none";
 			}
 			
-			async function workSpace (ec, search) {
-				var ml = new YouTubeJsObjectLists();
-				console.log(search);
+			async function workSpace (search) {
+				var ml = new YouTubeJsListMapper();
 				ec = await ml.search(search);
-				await loadElements(ec, true);
+				await loadElements(true);
 			}
 			
-			async function nextPage(ec) {
+			async function nextPage() {
 				ec = await ec.nextPage();
-				await loadElements(ec);
+				await loadElements();
 			}
 			
-			async function loadElements(ec, clear = false) {
+			async function loadElements(clear = false) {
 				var paginator = document.getElementById("paginator");
 				var searchElements = document.getElementById("search-elements");
 				var e;
@@ -127,39 +129,38 @@
 						var audio = new Audio('https://www.myinstants.com/media/sounds/its-me-mario.mp3');
 						audio.play();
 						hidePaginator();
-						ec = await nextPage(ec);
+						ec = await nextPage();
 					};
 				} else {
 					paginator.removeEventListener("onclick");
 				}
 			} 
 
-			function setup(ec) {
+			function setup() {
 				var search = document.getElementById("search");
 				var submit = document.getElementById("submit");
 				
 				submit.onclick = function(){
 					if (search.value.length > 0) {
-						workSpace(ec, search.value);
+						workSpace(search.value);
 					}
 				};
 				search.onkeypress = function(key){
 					if (key.keyCode == 13 && search.value.length > 0) {
-						workSpace(ec, search.value);
+						workSpace(search.value);
 					}
 				};
 			}
 			
-			query = "pokemon playlist";
-			params = getParams();
-			params.q
-			if (params.q != undefined & params.q != null) {
-				query = params.q;
-			}
-
-			var ec;
-			setup(ec);
-			workSpace(ec, query);
+			var eu = new ElementUtilities();
+            var params = eu.getParameters();
+            var query = "pokemmon";
+            if (params.q != undefined & params.q != null) {
+                query = params.q;
+            }
+            
+            setup();
+            workSpace(query);
 		</script>
 	</body>
 </html>

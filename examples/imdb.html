@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>IMDb</title>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		
+		<link rel="shortcut icon" href="http://ia.media-imdb.com/images/G/01/imdb/images/favicon-2165806970._CB514892157_.ico" type="image/x-icon">
+		<link rel="icon" href="http://ia.media-imdb.com/images/G/01/imdb/images/favicon-2165806970._CB514892157_.ico" type="image/x-icon">
+		
+		<link rel="stylesheet" type="text/css" href="css/base.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/header.w3c.css" />
+		<link rel="stylesheet" type="text/css" href="css/imdb.w3c.css" />
+	</head>
+	<body>
+		<header>
+			<div class="header-container clearfix">
+				<div class="header-top"></div>
+				<div class="header-main clearfix">
+					<div class="logo-container"></div>
+					<div class="search-container submit-container">
+						<input class="search" id="search" type="text" placeholder="Search" />
+						<div id="submit" class="submit"><span>Search</span></div>
+					</div>
+					<div class="author-container" >
+						Adán Mauri Ungaro - Pablo Costanzo
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="search-elements-container" id="search-elements-container" >
+			<div class="search-elements clearfix" id="search-elements"></div>
+		</div>
+
+		<script src="../JsListMapper.js" ></script>
+		<script src="../plugins/IMDb.JsListMapper.js" ></script>	
+		<script>
+			function elementAttr(e, ac) {
+				e.url = eu.getBaseUrl(ac.url, e.url).union(e.url);
+				if (!e.img.includes("nopicture")) {
+					var re1 = new RegExp("32","g");
+					var re2 = new RegExp("44","g");
+					e.img = e.img.replace(re1, "182").replace(re2, "268");
+				} 
+				e.info.removeChild(e.info.childNodes[0]);
+				if (e.info.childNodes.length > 1) {
+					text = e.info.childNodes[1].data;
+					text = text.split(" (").join("").split(") ").join("").split(")");										
+					if (text.length > 0) {
+						e.year = text[0];
+						if (text.length > 1) {
+							e.type = text[1];
+						}
+					}
+				}
+				
+				return e;
+			}
+			
+			function elementStr(e) {
+				res = `<a class="element" target="_blank" href="` + e.url + `">
+							<div class="element-box clearfix">
+								<div class="element-image" >
+									<img src="`+e.img+`" alt="`+e.title+`" />
+								</div>
+								<div class="element-info">
+									<div class="element-title">`+e.title+`</div>`;
+				if (e.year != undefined) {
+				res+= `				<div class="element-year">`+e.year+`</div>`;
+				}
+				if (e.type != undefined) {
+				res+= `				<div class="element-type">`+e.type+`</div>`;
+				}
+				res+= `			</div>
+							</div>
+						</a>`;
+				return res;
+			}
+			
+			async function workSpace (search) {
+				var ac = new IMDbJsListMapper();
+				ec = await ac.search(search);
+				await loadElements(true, ac);
+			}
+			
+			async function loadElements(clear = false, ac) {
+				var searchElements = document.getElementById("search-elements");
+				var e;
+				
+				if (clear) {
+					searchElements.innerHTML = "";
+				}
+				
+				while (e = ec.next()) {
+					 searchElements.innerHTML += elementStr(elementAttr(e, ac));
+				}
+			}
+			
+			function setup() {
+				var search = document.getElementById("search");
+				var submit = document.getElementById("submit");
+				
+				submit.onclick = function(){
+					if (search.value.length > 0) {
+						workSpace(search.value);
+					}
+				};
+				search.onkeypress = function(key){
+					if (key.keyCode == 13 && search.value.length > 0) {
+						workSpace(search.value);
+					}
+				};
+			}
+			
+			
+			var eu = new ElementUtilities();
+            var params = eu.getParameters();
+            var query = "sherlock";
+            if (params.q != undefined & params.q != null) {
+                query = params.q;
+            }
+            
+            setup();
+            workSpace(query);
+		</script>
+	</body>
+</html>

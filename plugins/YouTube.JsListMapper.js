@@ -1,4 +1,12 @@
-class YouTubeJsObjectLists extends JsObjectLists {
+class YouTubeJsListMapper extends JsListMapper {
+
+	/* Constructor
+	 * -----------
+	 * Params:
+	 * - url: String (optional)
+	 * 
+	 * Return: an JsListMapper object
+	 */
 	constructor(url){
 		
 		console.log("%cYou need to activate the old YouTube view before you can use this feature.", 'color: yellow; font-weight: bold;');
